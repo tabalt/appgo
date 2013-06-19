@@ -2,14 +2,20 @@ package appgo
 
 import (
 	"github.com/tabalt/appgo/config"
+    "fmt"
 )
 
+// var (
+
+// )
+
 type AppGo struct {
-    Config
-    
+    Config config.Config
+
     //...
 }
 
-func (app *AppGo) Run() {
-    
+func (app *AppGo) Init() {
+    app.Config.Init("config.json")
+    fmt.Println("init appgo")    
 }
