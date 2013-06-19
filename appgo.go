@@ -2,6 +2,7 @@ package appgo
 
 import (
 	"github.com/tabalt/appgo/config"
+    "github.com/tabalt/appgo/logger"
     "fmt"
 )
 
@@ -9,13 +10,15 @@ import (
 
 // )
 
-type AppGo struct {
+type App struct {
     Config config.Config
-
+    Logger logger.Logger
     //...
 }
 
-func (app *AppGo) Init() {
+func (app *App) Init() {
     app.Config.Init("config.json")
+    app.Logger.Init("log/app.log")
+    //init other module
     fmt.Println("init appgo")    
 }

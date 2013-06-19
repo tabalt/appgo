@@ -3,12 +3,13 @@ package config
 import (
     "encoding/json"
     "fmt"
-    //"github.com/tabalt/golib/logger"
+    "github.com/tabalt/appgo/logger"
     "io/ioutil"
 )
 
 type Config struct {
     file string
+    log logger.Logger
     data map[string]interface{}
 }
 
@@ -16,7 +17,7 @@ type Config struct {
 func (conf *Config) File2Config(fileName string) bool {
     file, err := ioutil.ReadFile(fileName)
     if err != nil {
-        //logger.Fatal(err.Error())
+        conf.log.Fatal(err.Error())
         fmt.Println(err.Error())
     }
     result := true
@@ -34,7 +35,7 @@ func (conf *Config) Config2File(fileName string) bool {
         fmt.Println(err.Error())
     }
     if err := ioutil.WriteFile(fileName, configContent, 0x777); err != nil {
-        //logger.Fatal(err.Error())
+        conf.log.Fatal(err.Error())
         fmt.Println(err.Error())
     }
     return true
@@ -57,7 +58,7 @@ func (conf *Config) Get(key string) interface{} {
     var config interface{}
     config, err := conf.data[key]
     if !err {
-        //logger.Fatal("配置项“" + key + "”不存在")
+        conf.log.Fatal("配置项“" + key + "”不存在")
         fmt.Println("配置项“" + key + "”不存在")
     }
     return config
@@ -73,7 +74,7 @@ func (conf *Config) Set(key string, value interface{}) bool {
     conf.data[key] = value
     _, err := conf.data[key]
     if !err {
-        //logger.Fatal("配置项“" + key + "”不存在")
+        conf.log.Fatal("配置项“" + key + "”不存在")
         fmt.Println("配置项“" + key + "”设置失败")
     }
     return true
