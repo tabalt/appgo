@@ -1,7 +1,12 @@
 package appgo
 
+import (
+	"github.com/tabalt/appgo/config"
+)
+
 type AppGo struct {
-    logger interface{}
+    Config
+    
     //...
 }
 
