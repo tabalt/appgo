@@ -9,7 +9,7 @@ import (
 
 type Config struct {
     file string
-    log logger.Logger
+    log  logger.Logger
     data map[string]interface{}
 }
 
@@ -46,7 +46,6 @@ func (conf *Config) Init(fileName string) bool {
     conf.file = fileName
     return conf.File2Config(conf.file)
 }
-
 
 //保存配置到文件
 func (conf *Config) Save() bool {
