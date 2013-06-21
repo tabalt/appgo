@@ -11,16 +11,16 @@ type Logger struct {
 }
 
 //init logger
-func (log *Logger) Init(fileName string) bool {
+func (this *Logger) Init(fileName string) bool {
     allowTypeList := []string{"Notice", "Fatal", "Error", "Default"}
-    log.typeList = allowTypeList
-    log.File = file.File{}
-    return log.File.Init(fileName)
+    this.typeList = allowTypeList
+    this.File = file.File{}
+    return this.File.Init(fileName)
 }
 
-func (log *Logger) saveLog(logType string, logContent string) {
+func (this *Logger) saveLog(logType string, logContent string) {
     trueType := "Default"
-    for _, typeName := range log.typeList {
+    for _, typeName := range this.typeList {
         if typeName == logType {
             trueType = logType
         }
@@ -29,19 +29,19 @@ func (log *Logger) saveLog(logType string, logContent string) {
     log.File.WriteFile(content)
 }
 
-func (log *Logger) Notice(logContent string) {
-    log.saveLog("Notice", logContent)
+func (this *Logger) Notice(logContent string) {
+    this.saveLog("Notice", logContent)
 }
 
-func (log *Logger) Fatal(logContent string) {
-    log.saveLog("Fatal", logContent)
+func (this *Logger) Fatal(logContent string) {
+    this.saveLog("Fatal", logContent)
     os.Exit(1)
 }
 
-func (log *Logger) Error(logContent string) {
-    log.saveLog("Error", logContent)
+func (this *Logger) Error(logContent string) {
+    this.saveLog("Error", logContent)
 }
 
-func (log *Logger) Default(logContent string) {
-    log.saveLog("Default", logContent)
+func (this *Logger) Default(logContent string) {
+    this.saveLog("Default", logContent)
 }
