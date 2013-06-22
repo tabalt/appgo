@@ -14,7 +14,6 @@ type Logger struct {
 func (this *Logger) Init(fileName string) bool {
     allowTypeList := []string{"Notice", "Fatal", "Error", "Default"}
     this.typeList = allowTypeList
-    this.File = file.File{}
     return this.File.Init(fileName)
 }
 
@@ -26,7 +25,7 @@ func (this *Logger) saveLog(logType string, logContent string) {
         }
     }
     content := fmt.Sprintf("%s : %s\n", trueType, logContent)
-    log.File.WriteFile(content)
+    this.File.WriteFile(content)
 }
 
 func (this *Logger) Notice(logContent string) {

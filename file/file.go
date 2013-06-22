@@ -7,7 +7,6 @@ import (
 
 type File struct {
     fileName string
-
 }
 
 func (this *File) Init(fileName string) bool {
@@ -27,7 +26,7 @@ func (this *File)  GetFileByte() []byte {
     f, err := os.Open(this.fileName)
     defer f.Close()
     if err != nil {
-        fmt.Println(err)
+        fmt.Println("Open file1 " + this.fileName + " Faild : ", err)
         os.Exit(1)
     }
     buf := make([]byte, 1024)
@@ -44,8 +43,8 @@ func (this *File)  GetFileByte() []byte {
 func (this *File)  WriteFile(content string) {
     f, err := os.OpenFile(this.fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
     if err != nil {
-        panic(err)
-        return
+        fmt.Println("Open file2 " + this.fileName + " Faild : ", err)
+        os.Exit(1)
     }
     defer f.Close()
     f.WriteString(content)

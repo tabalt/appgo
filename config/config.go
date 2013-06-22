@@ -9,7 +9,7 @@ import (
 
 type Config struct {
     file string
-    log  logger.Logger
+    Logger  logger.Logger
     data map[string]interface{}
 }
 
@@ -17,7 +17,7 @@ type Config struct {
 func (this *Config) File2Config(fileName string) bool {
     file, err := ioutil.ReadFile(fileName)
     if err != nil {
-        this.log.Fatal(err.Error())
+        this.Logger.Fatal(err.Error())
         fmt.Println(err.Error())
     }
     result := true
@@ -35,15 +35,16 @@ func (this *Config) Config2File(fileName string) bool {
         fmt.Println(err.Error())
     }
     if err := ioutil.WriteFile(fileName, configContent, 0x777); err != nil {
-        this.log.Fatal(err.Error())
+        this.Logger.Fatal(err.Error())
         fmt.Println(err.Error())
     }
     return true
 }
 
 //初始化配置
-func (this *Config) Init(fileName string) bool {
-    this.file = fileName
+func (this *Config) Init(configFile string, logFile string) bool {
+    this.file = configFile
+    this.Logger.Init(logFile)
     return this.File2Config(this.file)
 }
 
@@ -57,7 +58,7 @@ func (this *Config) Get(key string) interface{} {
     var config interface{}
     config, err := this.data[key]
     if !err {
-        this.log.Fatal("配置项“" + key + "”不存在")
+        this.Logger.Fatal("配置项“" + key + "”不存在")
         fmt.Println("配置项“" + key + "”不存在")
     }
     return config
@@ -73,7 +74,7 @@ func (this *Config) Set(key string, value interface{}) bool {
     this.data[key] = value
     _, err := this.data[key]
     if !err {
-        this.log.Fatal("配置项“" + key + "”不存在")
+        this.Logger.Fatal("配置项“" + key + "”不存在")
         fmt.Println("配置项“" + key + "”设置失败")
     }
     return true

@@ -11,15 +11,17 @@ import (
 // )
 
 type App struct {
+    ConfigFile string
+    LogFile string
     Config config.Config
     Logger logger.Logger
     //...
 }
 
-func (app *App) Init() {
-    app.Config.Init("config.json")
-    app.Logger.Init("log/app.log")
-    //init other module
+func (this *App) Init() {
     fmt.Println("init appgo")
+    this.Config.Init(this.ConfigFile, this.LogFile)
+    this.Logger.Init(this.LogFile)
+    //init other module
 }
     
