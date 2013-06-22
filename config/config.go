@@ -2,7 +2,6 @@ package config
 
 import (
     "encoding/json"
-    "fmt"
     "github.com/tabalt/appgo/logger"
     "io/ioutil"
 )
@@ -18,7 +17,6 @@ func (this *Config) File2Config(fileName string) bool {
     file, err := ioutil.ReadFile(fileName)
     if err != nil {
         this.Logger.Fatal(err.Error())
-        fmt.Println(err.Error())
     }
     result := true
     if err := json.Unmarshal(file, &this.data); err != nil {
@@ -31,12 +29,10 @@ func (this *Config) File2Config(fileName string) bool {
 func (this *Config) Config2File(fileName string) bool {
     configContent, err := json.Marshal(this.data)
     if err != nil {
-        //logger.Fatal(err.Error())
-        fmt.Println(err.Error())
+        this.Logger.Fatal(err.Error())
     }
     if err := ioutil.WriteFile(fileName, configContent, 0x777); err != nil {
         this.Logger.Fatal(err.Error())
-        fmt.Println(err.Error())
     }
     return true
 }
@@ -59,7 +55,6 @@ func (this *Config) Get(key string) interface{} {
     config, err := this.data[key]
     if !err {
         this.Logger.Fatal("配置项“" + key + "”不存在")
-        fmt.Println("配置项“" + key + "”不存在")
     }
     return config
 }
@@ -75,7 +70,6 @@ func (this *Config) Set(key string, value interface{}) bool {
     _, err := this.data[key]
     if !err {
         this.Logger.Fatal("配置项“" + key + "”不存在")
-        fmt.Println("配置项“" + key + "”设置失败")
     }
     return true
 }
