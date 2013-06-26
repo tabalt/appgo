@@ -10,37 +10,47 @@ type Logger struct {
     File file.File
 }
 
-//init logger
-func (this *Logger) Init(fileName string) bool {
-    allowTypeList := []string{"Notice", "Fatal", "Error", "Default"}
-    this.typeList = allowTypeList
-    return this.File.Init(fileName)
+// create Logger Object
+//TODO 可指定日志文件
+func NewLogger() *Logger {
+    // log type list
+    logTypeList := []string{"Notice", "Fatal", "Error", "Default"}
+    return &Logger{ 
+        typeList: logTypeList,
+        File : file.NewFile("log/app.log")
+    }
 }
 
-func (this *Logger) saveLog(logType string, logContent string) {
+//add log to file
+func (this *Logger) Log(logType string, content string) {
     trueType := "Default"
     for _, typeName := range this.typeList {
         if typeName == logType {
             trueType = logType
         }
     }
-    content := fmt.Sprintf("%s : %s\n", trueType, logContent)
-    this.File.WriteFile(content)
+    //TODO　log format
+    content := fmt.Sprintf("%s : %s\n", trueType, content)
+    this.File.Write(content)
 }
 
+// add Notice log
 func (this *Logger) Notice(logContent string) {
-    this.saveLog("Notice", logContent)
+    this.Log("Notice", logContent)
 }
 
+// add Fatal log
 func (this *Logger) Fatal(logContent string) {
-    this.saveLog("Fatal", logContent)
+    this.Log("Fatal", logContent)
     os.Exit(1)
 }
 
+// add Error log
 func (this *Logger) Error(logContent string) {
-    this.saveLog("Error", logContent)
+    this.Log("Error", logContent)
 }
 
+// add Default log
 func (this *Logger) Default(logContent string) {
-    this.saveLog("Default", logContent)
+    this.Log("Default", logContent)
 }
