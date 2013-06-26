@@ -6,27 +6,26 @@ import (
 )
 
 type File struct {
-    fileName string
+    name string
 }
 
-func (this *File) Init(fileName string) bool {
-    this.fileName = fileName
-    //init file...
-    return true
+// create File Object
+func NewFile(fileName string) *File {
+    return &File{ name: fileName}
 }
 
 //read file content
-func (this *File)  ReadFile() (content string) {
-    content = string(this.GetFileByte())
+func (this *File)  Read() (content string) {
+    content = string(this.GetBytes())
     return
 }
 
 //get file bytes
-func (this *File)  GetFileByte() []byte {
-    f, err := os.Open(this.fileName)
+func (this *File)  GetBytes() []byte {
+    f, err := os.Open(this.name)
     defer f.Close()
     if err != nil {
-        fmt.Println("Open file1 " + this.fileName + " Faild : ", err)
+        fmt.Println("Read file Faild. ", err.Error())
         os.Exit(1)
     }
     buf := make([]byte, 1024)
@@ -40,14 +39,15 @@ func (this *File)  GetFileByte() []byte {
 }
 
 //write content to file
-func (this *File)  WriteFile(content string) {
-    f, err := os.OpenFile(this.fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
+func (this *File)  Write(content string) {
+    f, err := os.OpenFile(this.name, os.O_RDWR|os.O_CREATE|os.O_APPEND, os.ModePerm)
     if err != nil {
-        fmt.Println("Open file2 " + this.fileName + " Faild : ", err)
+        fmt.Println("Write file Faild. ", err.Error())
         os.Exit(1)
     }
     defer f.Close()
     f.WriteString(content)
 }
+
 
 //删除文件 文件目录操作 读写加锁 etc.
