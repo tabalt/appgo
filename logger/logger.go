@@ -7,7 +7,7 @@ import (
 )
 type Logger struct {
     typeList []string
-    File file.File
+    File *file.File
 }
 
 // create Logger Object
@@ -15,10 +15,8 @@ type Logger struct {
 func NewLogger() *Logger {
     // log type list
     logTypeList := []string{"Notice", "Fatal", "Error", "Default"}
-    return &Logger{ 
-        typeList: logTypeList,
-        File : file.NewFile("log/app.log")
-    }
+    //fileObj := file.NewFile("log/app.log")
+    return &Logger{ typeList: logTypeList, File : file.NewFile("log/app.log")}
 }
 
 //add log to file
@@ -30,7 +28,7 @@ func (this *Logger) Log(logType string, content string) {
         }
     }
     //TODO　log format
-    content := fmt.Sprintf("%s : %s\n", trueType, content)
+    content = fmt.Sprintf("%s : %s\n", trueType, content)
     this.File.Write(content)
 }
 

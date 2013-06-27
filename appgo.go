@@ -9,6 +9,11 @@ import (
 // var (
 
 // )
+// ui
+
+
+//ConfigFile : "config.json", 
+//LogFile : "log/app.log",
 
 type App struct {
     ConfigFile string
@@ -20,8 +25,10 @@ type App struct {
 
 func (this *App) Init() {
     fmt.Println("init appgo")
-    this.Config.Init(this.ConfigFile, this.LogFile)
-    this.Logger.Init(this.LogFile)
+    fmt.Println("init config")
+    //this.Config.Init(this.ConfigFile, this.LogFile)
+    fmt.Println("init logger")
+    //this.Logger.Init(this.LogFile)
     //init other module
 }
     

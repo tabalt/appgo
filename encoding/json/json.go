@@ -4,21 +4,17 @@ import (
     "encoding/json"
     "github.com/tabalt/appgo/logger"
     "io/ioutil"
-    "errors"
 )
 
 type Json struct {
     fileName string
-    Logger  logger.Logger
+    Logger *logger.Logger
     object interface{}
 }
 
 // create Json Object
 func NewJson(fileName string) *Json {
-    return &Json{
-        fileName : fileName,
-        Logger : logger.NewLogger()
-    }
+    return &Json{ fileName : fileName, Logger : logger.NewLogger()}
 }
 
 //Read Json Object from file
