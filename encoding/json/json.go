@@ -14,7 +14,7 @@ type Json struct {
 
 // create Json Object
 func NewJson(fileName string) *Json {
-    return &Json{ fileName : fileName, Logger : logger.NewLogger()}
+    return &Json{ fileName : fileName, Logger : logger.NewLogger("log/app.log")}
 }
 
 //Read Json Object from file

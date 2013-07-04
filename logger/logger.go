@@ -12,11 +12,11 @@ type Logger struct {
 
 // create Logger Object
 //TODO 可指定日志文件
-func NewLogger() *Logger {
+func NewLogger(logPath string) *Logger {
     // log type list
     logTypeList := []string{"Notice", "Fatal", "Error", "Default"}
     //fileObj := file.NewFile("log/app.log")
-    return &Logger{ typeList: logTypeList, File : file.NewFile("log/app.log")}
+    return &Logger{ typeList: logTypeList, File : file.NewFile(logPath)}
 }
 
 //add log to file

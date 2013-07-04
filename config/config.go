@@ -13,8 +13,7 @@ type Config struct {
 }
 
 func NewConfig(fileName string) *Config {
-    fileName = "conf/config.json";
-    config := &Config{ file : fileName, Logger : logger.NewLogger(), Json : json.NewJson("")}
+    config := &Config{ file : fileName, Logger : logger.NewLogger("log/app.log"), Json : json.NewJson("")}
     jsonObject := config.Json.ReadFile(fileName)
     jsonMap, ok := jsonObject.(map[string] interface{})
     if ok {
