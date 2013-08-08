@@ -5,7 +5,7 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	conf = NewConfig("config_test.json")
+	conf = Instance("config_test.json")
 	if !conf {
 		t.Errorf("Init() failed. Got %v, expected true.", result)
 	}

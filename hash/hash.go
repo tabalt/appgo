@@ -6,13 +6,12 @@ import (
 	"fmt"
 )
 
-type Hash struct {
-
+// create Hash Object
+func Instance() *Hash {
+	return &Hash{}
 }
 
-// create Hash Object
-func NewHash() *Hash {
-    return &Hash{}
+type Hash struct {
 }
 
 //md5哈希

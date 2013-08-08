@@ -8,14 +8,25 @@ import (
 )
 
 var (
-	loggerObj *logger.Logger
-	fileObj   *file.File
+	cLogger *logger.Logger
+	cFile   *file.File
 )
 
 func init() {
-	loggerObj = logger.NewLogger("log/app.log")
+	cLogger = logger.Instance("log/app.log")
 }
 
+// get config instance
+func Instance(fileName string) *Config {
+	cFile = file.Instance(fileName)
+	cData := &ConfigData{boolList: make(map[string]bool), intList: make(map[string]int), float32List: make(map[string]float32), float64List: make(map[string]float64), stringList: make(map[string]string), arrayList: make(map[string][]string)}
+
+	config := &Config{data: cData}
+	config.Init()
+	return config
+}
+
+// config data struct
 type ConfigData struct {
 	boolList    map[string]bool
 	intList     map[string]int
@@ -26,55 +37,42 @@ type ConfigData struct {
 }
 
 type Config struct {
-	file string
-	data ConfigData
-}
-
-func NewConfig(fileName string) *Config {
-	fileObj = file.NewFile(fileName)
-	config := &Config{file: fileName}
-	config.Init()
-	return config
+	data *ConfigData
 }
 
 func (this *Config) Init() {
-	jsonBytes := fileObj.GetBytes()
-	//fmt.Println(jsonBytes)
-	//fmt.Println(len(fileObj.Read()))
+	jsonBytes := cFile.GetBytes()
 
 	var jsonObject interface{}
 	if err := json.Unmarshal(jsonBytes[:len(jsonBytes)], &jsonObject); err != nil {
-		loggerObj.Fatal(err.Error())
+		cLogger.Fatal(err.Error())
 	}
 	jsonMap, ok := jsonObject.(map[string]interface{})
 	if ok {
 		//config.data = jsonMap
 		for k, v := range jsonMap {
-			switch v.(type) {
+			fmt.Println("\n ----------- \n")
+			fmt.Println(k, " : ", v)
+			switch vtype := v.(type) {
 			case bool:
 				this.data.boolList[k] = v.(bool)
-				fmt.Println(k)
 			case int:
 				this.data.intList[k] = v.(int)
-				fmt.Println(k)
 			case float32:
 				this.data.float32List[k] = v.(float32)
-				fmt.Println(k)
 			case float64:
 				this.data.float64List[k] = v.(float64)
-				fmt.Println(k)
 			case string:
 				this.data.stringList[k] = v.(string)
-				fmt.Println(k)
 			case []string:
 				this.data.arrayList[k] = v.([]string)
-				fmt.Println(k)
 			default:
-				loggerObj.Warning("Unknown Config key :" + k + " , type : ")
+				//cLogger.Warning("Unknown Config key :" + k + " , type : " + v)
+				fmt.Println("Unknown type : ", vtype)
 			}
 		}
 	} else {
-		loggerObj.Fatal("Config file error")
+		cLogger.Fatal("Config file error")
 	}
 }
 
@@ -89,7 +87,7 @@ func (this *Config) Get(key string) interface{} {
 	var config interface{}
 	config, err := this.data[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " no exists")
+		cLogger.Fatal("config key " + key + " no exists")
 	}
 	return config
 }
@@ -100,7 +98,7 @@ func (this *Config) Set(key string, value interface{}) bool {
 	this.data[key] = value
 	_, err := this.data[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " no exists")
+		cLogger.Fatal("config key " + key + " no exists")
 	}
 	return true
 }
@@ -124,7 +122,7 @@ func (this *Config) CheckError(err error, key string) ret bool {
 func (this *Config) Bool(key string) (bool, error) {
 	v, err := this.data.boolList[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " not exists")
+		cLogger.Fatal("config key " + key + " not exists")
 	}
 	return v, nil
 }
@@ -133,7 +131,7 @@ func (this *Config) Bool(key string) (bool, error) {
 func (this *Config) Int(key string) (int, error) {
 	v, err := this.data.intList[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " not exists")
+		cLogger.Fatal("config key " + key + " not exists")
 	}
 	return v, nil
 }
@@ -142,7 +140,7 @@ func (this *Config) Int(key string) (int, error) {
 func (this *Config) Float32(key string) (float32, error) {
 	v, err := this.data.float32List[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " not exists")
+		cLogger.Fatal("config key " + key + " not exists")
 	}
 	return v, nil
 }
@@ -151,7 +149,7 @@ func (this *Config) Float32(key string) (float32, error) {
 func (this *Config) Float64(key string) (float64, error) {
 	v, err := this.data.float64List[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " not exists")
+		cLogger.Fatal("config key " + key + " not exists")
 	}
 	return v, nil
 }
@@ -160,7 +158,7 @@ func (this *Config) Float64(key string) (float64, error) {
 func (this *Config) String(key string) (string, error) {
 	v, err := this.data.stringList[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " not exists")
+		cLogger.Fatal("config key " + key + " not exists")
 	}
 	return v, nil
 }
@@ -169,7 +167,7 @@ func (this *Config) String(key string) (string, error) {
 func (this *Config) Array(key string) ([]string, error) {
 	v, err := this.data.arrayList[key]
 	if !err {
-		loggerObj.Fatal("config key " + key + " not exists")
+		cLogger.Fatal("config key " + key + " not exists")
 	}
 	return v, nil
 }

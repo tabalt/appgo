@@ -6,31 +6,38 @@ import (
 	"os"
 )
 
-type Logger struct {
+var (
+	lFile    *file.File
 	typeList []string
-	File     *file.File
+)
+
+// init logger package
+func init() {
+	// Log type list
+	typeList = []string{"Notice", "Fatal", "Error", "Default", "Warning"}
 }
 
 // create Logger Object
 //TODO 可指定日志文件
-func NewLogger(logPath string) *Logger {
-	// log type list
-	logTypeList := []string{"Notice", "Fatal", "Error", "Default", "Warning"}
-	//fileObj := file.NewFile("log/app.log")
-	return &Logger{typeList: logTypeList, File: file.NewFile(logPath)}
+func Instance(logPath string) *Logger {
+	lFile = file.Instance(logPath)
+	return &Logger{}
+}
+
+type Logger struct {
 }
 
 //add log to file
 func (this *Logger) Log(logType string, content string) {
 	trueType := "Default"
-	for _, typeName := range this.typeList {
+	for _, typeName := range typeList {
 		if typeName == logType {
 			trueType = logType
 		}
 	}
 	//TODO　log format
 	content = fmt.Sprintf("%s : %s\n", trueType, content)
-	this.File.Write(content)
+	lFile.Write(content)
 }
 
 // add Notice log
