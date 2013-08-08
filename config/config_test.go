@@ -1,13 +1,12 @@
 package config
 
 import (
-    "testing"
+	"testing"
 )
 
-func TestInit(t *testing.T) {
-    conf = Config{}
-    result := conf.Init()
-    if !result {
-        t.Errorf("Init() failed. Got %v, expected true.", result)
-    }
+func TestConfig(t *testing.T) {
+	conf = NewConfig("config_test.json")
+	if !conf {
+		t.Errorf("Init() failed. Got %v, expected true.", result)
+	}
 }
