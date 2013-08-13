@@ -13,22 +13,21 @@ var (
 	AppPath    string
 	ConfigPath string
 	LogPath    string
-	Config     *config.Config
-	Logger     *logger.Logger
+	AppConfig     *config.Config
+	AppLogger     *logger.Logger
 )
+
+func init() {
+    fmt.Println("init appgo")
+    ConfigPath = "conf/config.json"
+    LogPath = "log/app.log"
+    AppConfig = config.Instance(ConfigPath)
+    AppLogger = logger.Instance(LogPath)
+}
 
 type App struct {
 
 	//...
 }
 
-func init() {
-	fmt.Println("init appgo")
-	ConfigPath = "conf/config.json"
-	LogPath = "log/app.log"
-	Config = config.Instance(ConfigPath)
-	Logger = logger.Instance(LogPath)
-}
 
-type Base struct {
-}

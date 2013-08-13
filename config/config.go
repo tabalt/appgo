@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"github.com/tabalt/appgo/file"
 	"github.com/tabalt/appgo/logger"
 )
@@ -19,7 +20,7 @@ func init() {
 // get config instance
 func Instance(fileName string) *Config {
 	cFile = file.Instance(fileName)
-	cData := &ConfigData{boolList: make(map[string]bool), intList: make(map[string]int), float32List: make(map[string]float32), float64List: make(map[string]float64), stringList: make(map[string]string), arrayList: make(map[string][]string)}
+	cData := &ConfigData{boolList: make(map[string]bool), intList: make(map[string]int), float32List: make(map[string]float32), float64List: make(map[string]float64), stringList: make(map[string]string), arrayList: make(map[string][]interface{})}
 
 	config := &Config{data: cData}
 	config.Init()
@@ -33,7 +34,7 @@ type ConfigData struct {
 	float32List map[string]float32
 	float64List map[string]float64
 	stringList  map[string]string
-	arrayList   map[string][]string
+	arrayList   map[string][]interface{} 
 }
 
 type Config struct {
@@ -48,31 +49,36 @@ func (this *Config) Init() {
 		cLogger.Fatal(err.Error())
 	}
 	jsonMap, ok := jsonObject.(map[string]interface{})
-	if ok {
-		//config.data = jsonMap
-		for k, v := range jsonMap {
-			fmt.Println("\n ----------- \n")
-			fmt.Println(k, " : ", v)
-			switch vtype := v.(type) {
-			case bool:
-				this.data.boolList[k] = v.(bool)
-			case int:
-				this.data.intList[k] = v.(int)
-			case float32:
-				this.data.float32List[k] = v.(float32)
-			case float64:
-				this.data.float64List[k] = v.(float64)
-			case string:
-				this.data.stringList[k] = v.(string)
-			case []string:
-				this.data.arrayList[k] = v.([]string)
-			default:
-				//cLogger.Warning("Unknown Config key :" + k + " , type : " + v)
-				fmt.Println("Unknown type : ", vtype)
-			}
-		}
-	} else {
+	if !ok {
 		cLogger.Fatal("Config file error")
+		os.Exit(1)
+	}
+
+	for k, v := range jsonMap {
+		switch val := v.(type) {
+			case bool:
+				this.data.boolList[k] = val
+			case int:
+				this.data.intList[k] = val
+			case float32:
+				this.data.float32List[k] = val
+			case float64:
+				this.data.float64List[k] = val
+			case string:
+				this.data.stringList[k] = val
+			case []interface{}:
+				
+				/*strList := make(map[int] string)
+				fmt.Println(len(val))
+				for i, iv := range val {
+					fmt.Println(i, iv)
+					//strList[i] = string(iv.String())
+				}*/
+				this.data.arrayList[k] = val
+			default:
+				cLogger.Warning("Ignore config key :" + k )
+				fmt.Println("Ignore config key :" + k )
+		}
 	}
 }
 
@@ -164,7 +170,7 @@ func (this *Config) String(key string) (string, error) {
 }
 
 // array returns the string value for a given key.
-func (this *Config) Array(key string) ([]string, error) {
+func (this *Config) Array(key string) ([]interface{}, error) {
 	v, err := this.data.arrayList[key]
 	if !err {
 		cLogger.Fatal("config key " + key + " not exists")
