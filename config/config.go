@@ -134,6 +134,7 @@ func (this *Config) Bool(key string) (bool, error) {
 }
 
 // Int returns the integer value for a given key.
+//TODO this cannot be use
 func (this *Config) Int(key string) (int, error) {
 	v, err := this.data.intList[key]
 	if !err {
