@@ -65,9 +65,8 @@ func (this *MongoModel) All() ([]map[string]interface{}, error){
     return this.Find(nil)
 }
 
-
 //check if exists
-func (this *MongoModel)  Exist(dataSet interface{}) (result bool) {
+func (this *MongoModel) Exist(dataSet interface{}) (result bool) {
     result = false
     itemList,_ := this.Find(dataSet)
     if len(itemList) > 0 {
