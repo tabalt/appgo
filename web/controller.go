@@ -1,6 +1,7 @@
 package web
 
 import (
+	"html/template"
 	"io"
 	"net/http"
 )
@@ -17,19 +18,24 @@ type ControllerInterface interface {
 type Controller struct {
 }
 
+// render template
+// TODO deal template file not exist
+func (this *Controller) Render(w http.ResponseWriter, tplName string, context map[string]interface{}) {
+	tpl, err := template.ParseFiles(tplName)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	tpl.Execute(w, context)
+	return
+}
+
 func (this *Controller) Init(writer http.ResponseWriter, request *http.Request) {
 	io.WriteString(writer, "init Controller")
 }
 
 func (this *Controller) NotFound(writer http.ResponseWriter, request *http.Request) {
-
-	// TODO set 404 not found page
-	//io.WriteString(writer, "404 not found")
-	io.WriteString(writer, "404 not found\n"+request.URL.String()+"\n")
-}
-
-func (this *Controller) Forbidden(writer http.ResponseWriter, request *http.Request) {
-	io.WriteString(writer, "403 Forbidden")
+	http.Error(writer, "404 not found", http.StatusNotFound)
 }
 
 //------------------------------
