@@ -15,6 +15,10 @@ const (
 	PATH_SPLIT_STRING = "/"
 
 	EMPTY_STRING = ""
+
+	AUTO_CALL_METHOD_INIT   = "Init"
+	AUTO_CALL_METHOD_BEFORE = "Before"
+	AUTO_CALL_METHOD_AFTER  = "After"
 )
 
 var (
@@ -83,7 +87,7 @@ func (this *Router) GetCurrentController() (c ControllerInterface) {
 }
 
 // dispatch request to matched action of controller
-// TODO call more method: init/before/after
+// call method: Init -> Before -> ActionName -> After
 func (this *Router) Dispatch(w http.ResponseWriter, r *http.Request) {
 	currentController := this.GetCurrentController()
 
@@ -96,7 +100,10 @@ func (this *Router) Dispatch(w http.ResponseWriter, r *http.Request) {
 		method = reflectValue.MethodByName(NOTfOUND_ACTION_NAME)
 	}
 
+	reflectValue.MethodByName(AUTO_CALL_METHOD_INIT).Call(nil)
+	reflectValue.MethodByName(AUTO_CALL_METHOD_BEFORE).Call(param)
 	method.Call(param)
+	reflectValue.MethodByName(AUTO_CALL_METHOD_AFTER).Call(param)
 
 }
 
