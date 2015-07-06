@@ -1,28 +1,18 @@
 package web
 
 import (
-	"html/template"
 	"net/http"
 )
-
-var (
-	ViewPath  string
-	ViewParse *template.Template
-)
-
-func init() {
-
-}
-
-func SetViewPath(path string) {
-	ViewPath = path
-	ViewParse = template.Must(template.ParseGlob(_view_path + "*/*"))
-}
 
 //------------------------------
 //type ControllerInterface
 //------------------------------
 type ControllerInterface interface {
+	Init(context *Context)
+	Before(context *Context)
+	NotFound(context *Context)
+	After(context *Context)
+	UnInitialize(context *Context)
 }
 
 //------------------------------
@@ -31,46 +21,28 @@ type ControllerInterface interface {
 type Controller struct {
 }
 
-// render template
-// TODO deal template file not exist
-func (this *Controller) Render(w http.ResponseWriter, tplName string, context map[string]interface{}) {
-	tplFile := ViewPath + tplName
-	tpl, err := template.ParseFiles(tplName)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	tpl.Execute(w, context)
-	return
-}
-
-// show view
-// TODO deal template file not exist
-func (this *Controller) ShowView(w http.ResponseWriter, view_name string, context map[string]interface{}) {
-	err := ViewParse.ExecuteTemplate(w, view_name, context)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-}
-
-
-func (this *Controller) NotFound(writer http.ResponseWriter, request *http.Request) {
-	http.Error(writer, "404 not found", http.StatusNotFound)
-}
-
 // TODO init controller
-func (this *Controller) Init() {
+func (this *Controller) Init(context *Context) {
 
 }
 
 // Before runs before request function execution.
-func (this *Controller) Before(writer http.ResponseWriter, request *http.Request) {
+func (this *Controller) Before(context *Context) {
 
 }
 
+// not found action
+func (this *Controller) NotFound(context *Context) {
+	context.DisableView = true
+	http.Error(context.ResponseWriter, "404 not found", http.StatusNotFound)
+}
 // After runs after request function execution.
-func (this *Controller) After(writer http.ResponseWriter, request *http.Request) {
+func (this *Controller) After(context *Context) {
+
+}
+
+// TODO uninitialize controller
+func (this *Controller) UnInitialize(context *Context) {
 
 }
 //------------------------------
